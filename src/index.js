@@ -9,8 +9,8 @@ app.use(cors());
 
 
 app.get('/', (req,res)=>{
-    return res.json({messge:"Hola Mundo"})
-});
+    return res.json({mensaje: "hola mundo"})
+})
 
 
 app.listen(port, ()=>{
