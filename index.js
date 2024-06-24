@@ -141,7 +141,7 @@ app.post('/enviar-mensaje', async(req,res)=>{
   if (!client) {
       await conectDB();
   }
-  const {numero, mensaje} = req.body;   
+  // const {numero, mensaje} = req.body;   
 
   // if (!client) {
   //     client = new Client({
@@ -165,13 +165,15 @@ app.post('/enviar-mensaje', async(req,res)=>{
   //     // Inicialización del cliente
   //     await client.initialize();
   // }
-
+    if(client){
+      const {numero, mensaje} = req.body;   
       for (const phoneNumber of numero) {
           const formattedNumber = phoneNumber + '@c.us';
           console.log('formattedNumber:', formattedNumber)
-          await client.sendMessage(formattedNumber, mensaje);
+          await client.sendMessage(formattedNumber, mensaje || 'test');
       }   
      res.json({ mensaje: 'Mensajes enviados correctamente.' });
+    }
  } catch (error) {
   console.error('Error sending message:', error);
   conectDB()
@@ -186,7 +188,7 @@ app.post('/enviar-mensaje', async(req,res)=>{
 
 app.listen(port, ()=>{
     console.log('app escuchando en puerto' + port)
-    conectDB()
+    // conectDB()
 })
 
 // await client.initialize();
