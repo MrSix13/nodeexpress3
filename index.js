@@ -14,6 +14,8 @@ dotenv.config();
 app.use(express.json())
 app.use(cors());
 
+
+
 let client       = null;
 const port       = process.env.PORT || 3000;
 //=======================MONGODB=========================//
@@ -93,6 +95,17 @@ class MongoRemoteAuth extends RemoteAuth{
 //=======================MONGODB=========================//
 
 
+async function reconnect() {
+  try {
+    await client.initialize();
+    console.log('Reconnected to WhatsApp Web!');
+  } catch (error) {
+    console.error('Error during reconnection:', error);
+    // Implement exponential backoff or retry logic here
+  }
+}
+
+
 
 
 // const client = new Client({
@@ -150,6 +163,7 @@ app.post('/enviar-mensaje', async(req,res)=>{
      res.json({ mensaje: 'Mensajes enviados correctamente.' });
  } catch (error) {
   console.error('Error sending message:', error);
+  reconnect()
   res.status(500).json({ mensaje: 'Error al enviar mensajes' });
   }
   
