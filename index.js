@@ -184,7 +184,7 @@ app.post('/enviar-mensaje', async(req,res)=>{
   //     // Inicialización del cliente
   //     await client.initialize();
   // }
-    if(client){
+    if(isWhatsAppConnection){
       const {numero, mensaje} = req.body;   
       for (const phoneNumber of numero) {
           const formattedNumber = phoneNumber + '@c.us';
