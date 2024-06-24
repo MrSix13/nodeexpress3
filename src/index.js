@@ -10,6 +10,7 @@ app.use(express.json())
 app.use(cors());
 
 
+
 const client = new Client({
     authStrategy: new LocalAuth({ dataPath: 'session' }),
     webVersionCache: {
