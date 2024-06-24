@@ -6,12 +6,14 @@ import dotenv from 'dotenv';
 import express from 'express';
 import {mongoose} from 'mongoose';
 import { MongoStore } from 'wwebjs-mongo';
+import morgan from 'morgan';
 
 
 const app = express();
 
 dotenv.config();
 app.use(express.json())
+app.use(morgan('dev'));
 app.use(cors());
 
 
@@ -21,33 +23,39 @@ const port       = process.env.PORT || 3000;
 //=======================MONGODB=========================//
 const MONGO_URI  = process.env.MONGODB_URI;
 
-function conectDB(){
-    mongoose.connect(MONGO_URI).then(()=>{
-      const store = new MongoStore({mongoose: mongoose});
-      if(!client){
-        client = new Client({
-          authStrategy: new RemoteAuth({
-              store: store,
-              backupSyncIntervalMs: 300000
-          }),
-          webVersionCache: {
-                  type: "remote",
-                  remotePath:
-                    "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html",
-                },
-        });
-        client.on('qr', (qr) => {
-            qrcode.generate(qr, { small: true });
-            console.log('QR RECEIVED', qr);
-        });
-          
-        client.on('ready', () => {
-            console.log('Conectado a WhatsApp');
-        });
-      }
-      client.initialize();
-      console.log('conectado  MONGODB')
-    }).catch((error)=>console.log(error))
+async function conectDB(){
+  try {
+    await mongoose.connect(MONGO_URI)
+    const store = new MongoStore({mongoose: mongoose});
+    if(!client){
+      client = new Client({
+        authStrategy: new RemoteAuth({
+            store: store,
+            backupSyncIntervalMs: 300000
+        }),
+        webVersionCache: {
+                type: "remote",
+                remotePath:
+                  "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html",
+              },
+      });
+      client.on('qr', (qr) => {
+          qrcode.generate(qr, { small: true });
+          console.log('QR RECEIVED', qr);
+      });
+        
+      client.on('ready', () => {
+          console.log('Conectado a WhatsApp');
+      });
+      await client.initialize();
+    }
+    console.log('conectado  MONGODB')
+      
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+
 };
 
 const SessionSchema = new mongoose.Schema({
@@ -130,6 +138,9 @@ app.get('/1', (req,res)=>{
 
 app.post('/enviar-mensaje', async(req,res)=>{
   try {
+  if (!client) {
+      await conectDB();
+  }
   const {numero, mensaje} = req.body;   
 
   // if (!client) {
@@ -163,7 +174,7 @@ app.post('/enviar-mensaje', async(req,res)=>{
      res.json({ mensaje: 'Mensajes enviados correctamente.' });
  } catch (error) {
   console.error('Error sending message:', error);
-  reconnect()
+  conectDB()
   res.status(500).json({ mensaje: 'Error al enviar mensajes' });
   }
   

@@ -22,6 +22,7 @@
     "wwebjs-mongo": "^1.1.0"
   },
   "devDependencies": {
+    "morgan": "^1.10.0",
     "nodemon": "^3.1.4"
   }
 }
