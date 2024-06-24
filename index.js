@@ -18,7 +18,9 @@ app.use(cors());
 
 
 
-let client       = null;
+let client                 = null;
+let isWhatsAppConnection   = false;
+
 const port       = process.env.PORT || 3000;
 //=======================MONGODB=========================//
 const MONGO_URI  = process.env.MONGODB_URI;
@@ -46,6 +48,7 @@ async function conectDB(){
         
       client.on('ready', () => {
           console.log('Conectado a WhatsApp');
+          isWhatsAppConnection = true
       });
       await client.initialize();
     }
@@ -127,12 +130,28 @@ async function reconnect() {
 
 
 
-app.get('/', (req,res)=>{
-    return res.json({mensaje: "hola mundo v2"})
+app.get('/status', (req,res)=>{
+    return res.json({
+      isWhatsAppConnection
+    })
 })
 
-app.get('/1', (req,res)=>{
-    return res.json({mensaje: "hola mundo- 1"})
+app.get('/conection', async(req,res)=>{
+    try {
+      if(!client || !isWhatsAppConnection){
+        await conectDB()
+      }
+
+      if(client){
+        return res.json({isWhatsAppConnection})
+      }
+    } catch (error) {
+      console.log(error)
+      return res.json({error: 'Error al conectar WhatsApp'})
+    }  
+  
+  
+  return res.json({mensaje: "hola mundo- 1"})
 })
 
 
