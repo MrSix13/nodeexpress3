@@ -11,6 +11,7 @@ import morgan from 'morgan';
 
 const app = express();
 
+
 dotenv.config();
 app.use(express.json())
 app.use(morgan('dev'));
@@ -24,6 +25,7 @@ let isWhatsAppConnection   = false;
 const port       = process.env.PORT || 3000;
 //=======================MONGODB=========================//
 const MONGO_URI  = process.env.MONGODB_URI;
+
 
 async function conectDB(){
   try {
@@ -138,13 +140,7 @@ app.get('/status', (req,res)=>{
 
 app.get('/conection', async(req,res)=>{
     try {
-      if(!client || !isWhatsAppConnection){
-        await conectDB()
-      }
-
-      if(client){
-        return res.json({isWhatsAppConnection})
-      }
+      await conectDB()
     } catch (error) {
       console.log(error)
       return res.json({error: 'Error al conectar WhatsApp'})
@@ -160,30 +156,10 @@ app.post('/enviar-mensaje', async(req,res)=>{
   if (!client) {
       await conectDB();
   }
-  // const {numero, mensaje} = req.body;   
 
-  // if (!client) {
-  //     client = new Client({
-  //         authStrategy: new LocalAuth({ dataPath: 'session' }),
-  //         webVersionCache: {
-  //             type: "remote",
-  //             remotePath: "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html",
-  //         },
-  //     });
-
-  //     // Eventos del cliente
-  //     client.on('qr', (qr) => {
-  //         qrcode.generate(qr, { small: true });
-  //         console.log('QR RECEIVED', qr);
-  //     });
-
-  //     client.on('ready', () => {
-  //         console.log('Conectado a WhatsApp');
-  //     });
-
-  //     // Inicialización del cliente
-  //     await client.initialize();
-  // }
+  if(!isWhatsAppConnection){
+    await conectDB();
+  }
     if(isWhatsAppConnection){
       const {numero, mensaje} = req.body;   
       for (const phoneNumber of numero) {
