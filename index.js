@@ -19,6 +19,7 @@ app.use(cors());
 
 
 
+
 let client                 = null;
 let isWhatsAppConnection   = false;
 
