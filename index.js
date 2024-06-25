@@ -148,7 +148,7 @@ app.get('/conection', async(req,res)=>{
     }  
   
   
-  return res.json({mensaje: "hola mundo- 1"})
+  return res.json({isWhatsAppConnection})
 })
 
 
