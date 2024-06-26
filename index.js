@@ -48,16 +48,17 @@ async function conectDB(){
           console.log('QR RECEIVED', qr);
       });
         
-      const clientReady = new Promise((resolve) => {
-        client.on('ready', () => {
-          console.log('Conectado a WhatsApp');
-          isWhatsAppConnection = true;
-          resolve();
-        });
+      client.on('ready', () => {
+        console.log('Conectado a WhatsApp');
+        isWhatsAppConnection = true;
+        resolve();
       });
 
+      // const clientReady = new Promise((resolve) => {
+      // });
+
       await client.initialize();
-      await clientReady;
+   
     console.log('conectado  MONGODB')
       
     } catch (error) {
