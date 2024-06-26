@@ -32,7 +32,6 @@ async function conectDB(){
   try {
     await mongoose.connect(MONGO_URI)
     const store = new MongoStore({mongoose: mongoose});
-    if(!client){
       client = new Client({
         authStrategy: new RemoteAuth({
             store: store,
@@ -49,12 +48,16 @@ async function conectDB(){
           console.log('QR RECEIVED', qr);
       });
         
-      client.on('ready', () => {
+      const clientReady = new Promise((resolve) => {
+        client.on('ready', () => {
           console.log('Conectado a WhatsApp');
-          isWhatsAppConnection = true
+          isWhatsAppConnection = true;
+          resolve();
+        });
       });
+
       await client.initialize();
-    }
+      await clientReady;
     console.log('conectado  MONGODB')
       
     } catch (error) {
