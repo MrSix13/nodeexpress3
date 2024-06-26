@@ -51,7 +51,6 @@ async function conectDB(){
       client.on('ready', () => {
         console.log('Conectado a WhatsApp');
         isWhatsAppConnection = true;
-        resolve();
       });
 
       // const clientReady = new Promise((resolve) => {
