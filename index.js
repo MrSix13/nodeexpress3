@@ -32,31 +32,30 @@ async function conectDB(){
   try {
     await mongoose.connect(MONGO_URI)
     const store = new MongoStore({mongoose: mongoose});
-      client = new Client({
-        authStrategy: new RemoteAuth({
-            store: store,
-            backupSyncIntervalMs: 300000
-        }),
-        webVersionCache: {
-                type: "remote",
-                remotePath:
-                  "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html",
-              },
-      });
-      client.on('qr', (qr) => {
-          qrcode.generate(qr, { small: true });
-          console.log('QR RECEIVED', qr);
-      });
-        
-      client.on('ready', () => {
-        console.log('Conectado a WhatsApp');
-        isWhatsAppConnection = true;
-      });
-
-      // const clientReady = new Promise((resolve) => {
-      // });
-
-      await client.initialize();
+      console.log('Conectandose a Whastap Web')
+      if(!isWhatsAppConnection){
+        client = new Client({
+          authStrategy: new MongoRemoteAuth({
+              store: store,
+              backupSyncIntervalMs: 300000
+          }),
+          webVersionCache: {
+                  type: "remote",
+                  remotePath:
+                    "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html",
+                },
+        });
+        client.on('qr', (qr) => {
+            qrcode.generate(qr, { small: true });
+            console.log('QR RECEIVED', qr);
+        });
+          
+        client.on('ready', () => {
+          console.log('Conectado a WhatsApp');
+          isWhatsAppConnection = true;
+        });
+        await client.initialize();
+      }
    
     console.log('conectado  MONGODB')
       
@@ -99,6 +98,7 @@ class MongoRemoteAuth extends RemoteAuth{
       await existingSession.updateOne(session);
     }else{
       const newSession = new Session(session);
+      console.log('Nueva Sesion:', newSessions)
       await newSession.save();
     }
   }
