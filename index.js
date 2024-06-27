@@ -34,6 +34,7 @@ async function conectDB(){
     const store = new MongoStore({mongoose: mongoose});
       console.log('Conectandose a Whastap Web')
       if(!isWhatsAppConnection){
+        console.log('Creando Instancia Client')
         client = new Client({
           authStrategy: new MongoRemoteAuth({
               store: store,
@@ -49,7 +50,9 @@ async function conectDB(){
             qrcode.generate(qr, { small: true });
             console.log('QR RECEIVED', qr);
         });
-          
+
+        console.log('Finalizando Instancia Client')  
+        
         client.on('ready', () => {
           console.log('Conectado a WhatsApp');
           isWhatsAppConnection = true;
