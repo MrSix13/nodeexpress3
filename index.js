@@ -20,8 +20,9 @@ app.use(cors());
 
 
 
-let client                 = null;
-let isWhatsAppConnection   = false;
+let client                   = null;
+let isWhatsAppConnection     = false;
+let versionCacheWhastAppWeb  = '2.2413.51-beta.html'
 
 const port       = process.env.PORT || 3000;
 //=======================MONGODB=========================//
@@ -43,7 +44,7 @@ async function conectDB(){
           webVersionCache: {
                   type: "remote",
                   remotePath:
-                    "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html",
+                    `https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/${versionCacheWhastAppWeb}`,
                 },
         });
         client.on('qr', (qr) => {
