@@ -1,5 +1,5 @@
 import cors from 'cors';
-const { Client, LocalAuth, RemoteAuth } = pkg;
+const { Client, LocalAuth, RemoteAuth,MessageMedia } = pkg;
 import pkg from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
 import dotenv from 'dotenv';
@@ -173,6 +173,36 @@ app.post('/enviar-mensaje', async(req,res)=>{
           const formattedNumber = phoneNumber + '@c.us';
           console.log('formattedNumber:', formattedNumber)
           await client.sendMessage(formattedNumber, mensaje || 'test');
+
+      }   
+     res.json({ mensaje: 'Mensajes enviados correctamente.' });
+    }
+ } catch (error) {
+  console.error('Error sending message:', error);
+  conectDB()
+  res.status(500).json({ mensaje: 'Error al enviar mensajes' });
+  }
+  
+});
+
+
+app.post('/enviar-mensaje-pdf', async(req,res)=>{
+  try {
+  if (!client) {
+      await conectDB();
+  }
+
+  if(!isWhatsAppConnection){
+    await conectDB();
+  }
+    if(isWhatsAppConnection){
+      const {numero, mensaje} = req.body;   
+      for (const phoneNumber of numero) {
+          const formattedNumber = phoneNumber + '@c.us';
+          console.log('formattedNumber:', formattedNumber)
+          const media = await MessageMedia.fromUrl('https://www.mtoopticos.cl/pdf/junaeb.pdf');
+          await client.sendMessage(formattedNumber, media,  { caption: 'this is my caption' });
+
       }   
      res.json({ mensaje: 'Mensajes enviados correctamente.' });
     }
