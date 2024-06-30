@@ -182,7 +182,7 @@ app.get('/2', (req,res)=>{
 
 app.get('/status', (req,res)=>{
     return res.json({
-      isWhatsAppConnection
+      mensaje: isWhatsAppConnection
     })
 })
 
