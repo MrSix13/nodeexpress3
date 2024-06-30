@@ -1,6 +1,7 @@
-{
+
+  {
     "version": 2,
     "builds": [{ "src": "./index.ts", "use": "@now/node" }],
-    "routes": [{ "handle": "vercel", "src": "/(.*)" }]
+    "routes": [{ "handle": "vercel", "src": "/(.*)", "methods": ["GET", "POST", "PUT", "DELETE"] }]
     
   }
