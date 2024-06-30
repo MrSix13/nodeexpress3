@@ -4,6 +4,11 @@ const { MessageMedia } = pkg;
 const router = express.Router();
 
 
+router.get('/', (req,res)=>{
+    return res.json({
+       mensaje:"Bienvenido a API node"
+    })
+})
 
 router.get('/status', (req,res)=>{
     return res.json({
