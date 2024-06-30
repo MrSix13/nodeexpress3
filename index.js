@@ -9,13 +9,11 @@ import qrcode from 'qrcode-terminal';
 import {mongoose} from 'mongoose';
 import { MongoStore } from 'wwebjs-mongo';
 
-import router from './src/routes.js'
 
 const app = express();
 
 
 dotenv.config();
-app.use('/api', router);
 app.use(express.json())
 app.use(morgan('dev'));
 app.use(cors());
@@ -165,6 +163,12 @@ async function reconnect() {
 app.get('/', (req,res)=>{
   return res.json({
      mensaje:"Bienvenido a API node index"
+  })
+})
+
+app.get('/2', (req,res)=>{
+  return res.json({
+     mensaje:"Bienvenido a API node index 2"
   })
 })
 
