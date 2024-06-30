@@ -3,6 +3,10 @@ import pkg from 'whatsapp-web.js';
 const { MessageMedia } = pkg;
 const router = express.Router();
 
+let client                   = null;
+let isWhatsAppConnection     = false;
+
+
 
 router.get('/', (req,res)=>{
     return res.json({
