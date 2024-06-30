@@ -174,6 +174,7 @@ app.get('/conection', async(req,res)=>{
       return res.json({error: 'Error al conectar WhatsApp'})
     }  
   
+    
   
   return res.json({isWhatsAppConnection})
 })
