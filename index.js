@@ -9,7 +9,7 @@ import qrcode from 'qrcode-terminal';
 import {mongoose} from 'mongoose';
 import { MongoStore } from 'wwebjs-mongo';
 
-import router from './src/routes';
+import router from './src/routes.js';
 
 const app = express();
 
