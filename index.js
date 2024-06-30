@@ -15,10 +15,10 @@ const app = express();
 
 
 dotenv.config();
+app.use('/api', router);
 app.use(express.json())
 app.use(morgan('dev'));
 app.use(cors());
-app.use('/api', router);
 
 
 
