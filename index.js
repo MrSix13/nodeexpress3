@@ -81,38 +81,57 @@ const SessionSchema = new mongoose.Schema({
 const Session = mongoose.model('Session',SessionSchema);
 
 
-class MongoRemoteAuth extends RemoteAuth{
-  constructor(store){
+class MongoRemoteAuth extends RemoteAuth {
+  constructor(store) {
     super(store);
   }
 
-  async getSession(){
-    const sessions = await Session.find();
-    return sessions.map((session)=>({
-      id        : session.id,
-      session   : session.session,
-      qrCode    : session.qrCode,
-      expiresAt : session.expiresAt
-    }));
-  }
-
-
-  async saveSession(session){
-    const existingSession = await Session.findById(session.id);
-    if(existingSession){
-      await existingSession.updateOne(session);
-    }else{
-      const newSession = new Session(session);
-      console.log('Nueva Sesion:', newSessions)
-      await newSession.save();
+  async getSession() {
+    try {
+      const sessions = await Session.find();
+      console.log('Sesiones encontradas en MongoDB:', sessions);
+      return sessions.map((session) => ({
+        id: session.id,
+        session: session.session,
+        qrCode: session.qrCode,
+        expiresAt: session.expiresAt
+      }));
+    } catch (error) {
+      console.error('Error al obtener las sesiones:', error);
+      throw error;
     }
   }
 
+  async saveSession(session) {
+    try {
+      console.log('Intentando guardar la sesión:', session);
+      const updatedSession = await Session.findOneAndUpdate(
+        { id: session.id },
+        session,
+        { new: true, upsert: true }
+      );
+      if (!updatedSession) {
+        console.log('Nueva Sesión guardada:', session);
+      } else {
+        console.log('Sesión actualizada:', updatedSession);
+      }
+    } catch (error) {
+      console.error('Error al guardar la sesión:', error);
+      throw error;
+    }
+  }
 
-  async deleteSession(sessionId){
-    await Session.findByIdAndDelete(sessionId)
+  async deleteSession(sessionId) {
+    try {
+      await Session.findByIdAndDelete(sessionId);
+      console.log('Sesión eliminada:', sessionId);
+    } catch (error) {
+      console.error('Error al eliminar la sesión:', error);
+      throw error;
+    }
   }
 }
+
 
 //=======================MONGODB=========================//
 
