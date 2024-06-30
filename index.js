@@ -162,6 +162,12 @@ async function reconnect() {
 //   });
 
 
+app.get('/', (req,res)=>{
+  return res.json({
+     mensaje:"Bienvenido a API node"
+  })
+})
+
 
 app.get('/status', (req,res)=>{
     return res.json({
