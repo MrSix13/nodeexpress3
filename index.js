@@ -23,6 +23,7 @@ app.use(cors());
 
 
 
+
 let client                   = null;
 let isWhatsAppConnection     = false;
 let versionCacheWhastAppWeb  = '2.2413.51-beta.html'
