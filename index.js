@@ -1,13 +1,15 @@
 import cors from 'cors';
-const { Client, LocalAuth, RemoteAuth,MessageMedia } = pkg;
-import pkg from 'whatsapp-web.js';
-import qrcode from 'qrcode-terminal';
-import dotenv from 'dotenv';
 import express from 'express';
-import {mongoose} from 'mongoose';
-import { MongoStore } from 'wwebjs-mongo';
 import morgan from 'morgan';
 
+import pkg from 'whatsapp-web.js';
+import dotenv from 'dotenv';
+const { Client, RemoteAuth,MessageMedia } = pkg;
+import qrcode from 'qrcode-terminal';
+import {mongoose} from 'mongoose';
+import { MongoStore } from 'wwebjs-mongo';
+
+import router from './src/routes.js'
 
 const app = express();
 
@@ -16,6 +18,7 @@ dotenv.config();
 app.use(express.json())
 app.use(morgan('dev'));
 app.use(cors());
+app.use('/api', router);
 
 
 
@@ -174,7 +177,7 @@ app.get('/conection', async(req,res)=>{
       return res.json({error: 'Error al conectar WhatsApp'})
     }  
   
-    
+
   
   return res.json({isWhatsAppConnection})
 })
