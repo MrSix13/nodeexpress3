@@ -9,7 +9,8 @@ import qrcode from 'qrcode-terminal';
 import {mongoose} from 'mongoose';
 import { MongoStore } from 'wwebjs-mongo';
 
-import router from './src/routes.js';
+
+const router = express.Router();
 
 const app = express();
 
@@ -27,9 +28,9 @@ app.use(cors());
 
 let client                   = null;
 let isWhatsAppConnection     = false;
-let versionCacheWhastAppWeb  = '2.2413.51-beta.html'
+let versionCacheWhastAppWeb  = '2.3000.1012089252-alpha.html'
 
-const port       = process.env.PORT || 3000;
+const port       = process.env.PORT || 5000;
 //=======================MONGODB=========================//
 const MONGO_URI  = process.env.MONGODB_URI;
 
@@ -207,7 +208,7 @@ app.post('/enviar-mensaje', async(req,res)=>{
   }
 
   if(!isWhatsAppConnection){
-    await conectDB();
+    return res.json({mensaje:"Conenctando a wsp, intente mas tarde"})
   }
     if(isWhatsAppConnection){
       const {numero, mensaje} = req.body;   
@@ -258,11 +259,11 @@ app.post('/enviar-mensaje-pdf', async(req,res)=>{
 
 
 
-export default app
 
-// app.listen(port, ()=>{
-//     console.log('app escuchando en puerto' + port)
-//     // conectDB()
-// })
+
+app.listen(port, ()=>{
+    console.log('app escuchando en puerto' + port)
+    // conectDB()
+})
 
 // await client.initialize();
