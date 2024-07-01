@@ -258,11 +258,11 @@ app.post('/enviar-mensaje-pdf', async(req,res)=>{
 
 
 
+export default app
 
-
-app.listen(port, ()=>{
-    console.log('app escuchando en puerto' + port)
-    // conectDB()
-})
+// app.listen(port, ()=>{
+//     console.log('app escuchando en puerto' + port)
+//     // conectDB()
+// })
 
 // await client.initialize();
