@@ -28,6 +28,7 @@ app.use(cors());
 
 let client                   = null;
 let isWhatsAppConnection     = false;
+// https://github.com/wppconnect-team/wa-version/blob/main/html/2.3000.1012089252-alpha.html
 let versionCacheWhastAppWeb  = '2.3000.1012089252-alpha.html'
 
 const port       = process.env.PORT || 5000;
@@ -62,12 +63,13 @@ async function conectDB(){
             console.log('QR RECEIVED', qr);
         });
 
-        console.log('Finalizando Instancia Client')  
         
         client.on('ready', () => {
           console.log('Conectado a WhatsApp');
           isWhatsAppConnection = true;
         });
+
+        console.log('Finalizando Instancia Client')  
         await client.initialize();
       }
    
@@ -96,48 +98,27 @@ class MongoRemoteAuth extends RemoteAuth {
   }
 
   async getSession() {
-    try {
-      const sessions = await Session.find();
-      console.log('Sesiones encontradas en MongoDB:', sessions);
-      return sessions.map((session) => ({
-        id: session.id,
-        session: session.session,
-        qrCode: session.qrCode,
-        expiresAt: session.expiresAt
-      }));
-    } catch (error) {
-      console.error('Error al obtener las sesiones:', error);
-      throw error;
-    }
+    const sessions = await Session.find();
+    return sessions.map((session) => ({
+      id: session.id,
+      session: session.session,
+      qrCode: session.qrCode,
+      expiresAt: session.expiresAt,
+    }));
   }
 
   async saveSession(session) {
-    try {
-      console.log('Intentando guardar la sesión:', session);
-      const updatedSession = await Session.findOneAndUpdate(
-        { id: session.id },
-        session,
-        { new: true, upsert: true }
-      );
-      if (!updatedSession) {
-        console.log('Nueva Sesión guardada:', session);
-      } else {
-        console.log('Sesión actualizada:', updatedSession);
-      }
-    } catch (error) {
-      console.error('Error al guardar la sesión:', error);
-      throw error;
+    const existingSession = await Session.findById(session.id);
+    if (existingSession) {
+      await existingSession.updateOne(session);
+    } else {
+      const newSession = new Session(session);
+      await newSession.save();
     }
   }
 
   async deleteSession(sessionId) {
-    try {
-      await Session.findByIdAndDelete(sessionId);
-      console.log('Sesión eliminada:', sessionId);
-    } catch (error) {
-      console.error('Error al eliminar la sesión:', error);
-      throw error;
-    }
+    await Session.findByIdAndDelete(sessionId);
   }
 }
 
@@ -206,6 +187,7 @@ app.post('/enviar-mensaje', async(req,res)=>{
   if (!client) {
       await conectDB();
   }
+
 
   if(!isWhatsAppConnection){
     return res.json({mensaje:"Conenctando a wsp, intente mas tarde"})
