@@ -41,10 +41,10 @@ class WhastappClient{
     createClientConnection(){
         return new Promise(async(resolve,reject)=>{
             
-            const mongoURI = this.mongoURI;
-            await mongoose.connect(mongoURI).then(()=>{
-                console.log('conectado a mognodb')
-            })
+            // const mongoURI = this.mongoURI;
+            // await mongoose.connect(mongoURI).then(()=>{
+            //     console.log('conectado a mognodb')
+            // })
 
             const __filename = fileURLToPath(import.meta.url);
             const __dirname = path.dirname(__filename);
