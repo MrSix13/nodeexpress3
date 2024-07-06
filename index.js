@@ -86,7 +86,8 @@ async function conectDB(){
       }
    
     console.log('conectado  MONGODB')
-      
+
+    
     } catch (error) {
       console.log(error)
       throw error
