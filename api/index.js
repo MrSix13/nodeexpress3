@@ -8,7 +8,7 @@ const { Client, RemoteAuth,MessageMedia } = pkg;
 import qrcode from 'qrcode-terminal';
 import {mongoose} from 'mongoose';
 import { MongoStore } from 'wwebjs-mongo';
-import WhastappClient from './src/WhatsappClient.js';
+import WhastappClient from '../src/WhatsappClient.js';
 
 
 const router = express.Router();
