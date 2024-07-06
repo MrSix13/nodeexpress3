@@ -44,7 +44,7 @@ class WhastappClient{
             const mongoURI = this.mongoURI;
             await mongoose.connect(mongoURI).then(()=>{
                 console.log('conectado a mognodb')
-            });
+            })
 
             const __filename = fileURLToPath(import.meta.url);
             const __dirname = path.dirname(__filename);
@@ -58,6 +58,7 @@ class WhastappClient{
                 args: ['--no-sandbox', '--disable-setuid-sandbox'],
               };
               
+
 
 
             const store = new MongoStore({mongoose: mongoose})
