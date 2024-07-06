@@ -2,7 +2,7 @@ import { MongoStore } from "wwebjs-mongo";
 import mongoose from "mongoose";
 // import { RemoteAuth, Client } from "whatsapp-web.js";
 import pkg from 'whatsapp-web.js';
-const { Client, RemoteAuth,MessageMedia } = pkg;
+const { Client, RemoteAuth,MessageMedia,LocalAuth } = pkg;
 import qrcode from 'qrcode-terminal';
 // const { RemoteAuth, Client } = require('whatsapp-web.js');
 
@@ -43,11 +43,14 @@ class WhastappClient{
                 puppeteer: {
                   args: ["--no-sandbox"],
                 },
-                authStrategy: new RemoteAuth({
-                  clientId: `${this.userId}`,
-                  store: store,
-                  backupSyncIntervalMs: 300000,
+                authStrategy: new LocalAuth({
+                    dataPath: './sessions', // Specify the data path for local storage
                 }),
+                // authStrategy: new RemoteAuth({
+                //   clientId: `${this.userId}`,
+                //   store: store,
+                //   backupSyncIntervalMs: 300000,
+                // }),
               });
             
               client.on("qr", (qr) => {

@@ -1,5 +1,5 @@
 /node_modules
 .gitignore
-/session
+/sessions
 .env
 /.wwebjs_auth
