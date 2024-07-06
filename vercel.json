@@ -1,3 +1,4 @@
+
 {
   "version": 2,
   "builds": [
@@ -9,8 +10,18 @@
   "routes": [
     {
       "src": "/2",
-      "dest": ".index.js",
+      "dest": "/index.js",
       "methods": ["GET", "POST", "PUT", "DELETE"]
     }
-  ]
+  ],
+  "functions": {
+    "node": {
+      "includeFiles": "node_modules/puppeteer/.local-chromium/**/*"
+    }
+  },
+  "build": {
+    "env": {
+      "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
+    }
+  }
 }
