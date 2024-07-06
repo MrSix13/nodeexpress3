@@ -52,18 +52,36 @@ class WhastappClient{
             const dataPath = process.env.NODE_ENV === 'production' ? '/tmp/sessions' : path.join(__dirname, 'sessions');            
             mkdirSync(dataPath, { recursive: true });
             console.log(dataPath)
-            const puppeteerOptions = {
-                headless: true,
-                executablePath: process.env.NODE_ENV === 'production' ? '/usr/bin/google-chrome-stable' : puppeteer.executablePath(),
-                args: ['--no-sandbox', '--disable-setuid-sandbox'],
-              };
+            let puppeterOption = {}
+
+            if (process.env.NODE_ENV === 'production') {
+                puppeterOption = {
+                    args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
+                    defaultViewport: chromium.defaultViewport,
+                    executablePath: await chromium.executablePath,
+                    headless: chromium.headless,
+                }
+
+            }else{
+                puppeterOption = {
+                    headless: true,
+                    executablePath: puppeteer.executablePath(),
+                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                }
+            }
+
+            // const puppeteerOptions = {
+            //     headless: true,
+            //     executablePath: process.env.NODE_ENV === 'production' ? '/usr/bin/google-chrome-stable' : puppeteer.executablePath(),
+            //     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            //   };
             
             const store = new MongoStore({mongoose: mongoose})
             const client = new Client({
                 puppeteer: {
                   args: ["--no-sandbox"],
                 },
-                puppeteer: puppeteerOptions,
+                puppeteer: puppeterOption,
                 authStrategy: new LocalAuth({
                     dataPath: dataPath, // Specify the data path for local storage
                 }),
