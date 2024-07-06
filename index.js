@@ -8,6 +8,7 @@ const { Client, RemoteAuth,MessageMedia } = pkg;
 import qrcode from 'qrcode-terminal';
 import {mongoose} from 'mongoose';
 import { MongoStore } from 'wwebjs-mongo';
+import WhastappClient from './src/WhatsappClient.js';
 
 
 const router = express.Router();
@@ -29,13 +30,13 @@ app.use(cors());
 let client                   = null;
 let isWhatsAppConnection     = false;
 // https://github.com/wppconnect-team/wa-version/blob/main/html/2.3000.1012089252-alpha.html
-let versionCacheWhastAppWeb  = '2.3000.1012089252-alpha.html'
+let versionCacheWhastAppWeb  = '2.3000.1014380769-alpha.html'
 
 const port       = process.env.PORT || 5000;
 //=======================MONGODB=========================//
 const MONGO_URI  = process.env.MONGODB_URI;
 
-
+console.log(`https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/${versionCacheWhastAppWeb}`)
 
 
 
@@ -44,6 +45,7 @@ async function conectDB(){
   try {
     await mongoose.connect(MONGO_URI)
     const store = new MongoStore({mongoose: mongoose});
+    console.log
       console.log('Conectandose a Whastap Web')
       if(!isWhatsAppConnection){
         console.log('Creando Instancia Client')
@@ -52,10 +54,14 @@ async function conectDB(){
               store: store,
               backupSyncIntervalMs: 300000
           }),
+          restartOnAuthFail:true,
+          puppeteer: {
+            headless: false,
+            // args: [/* your args here */]
+          },
           webVersionCache: {
                   type: "remote",
-                  remotePath:
-                    `https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/${versionCacheWhastAppWeb}`,
+                  remotePath:`https://raw.githubusercontent.com/wppconnect-team/wa-version/601b90a9fffce8a19e08efba9bd804fdcb43f656/html/2.2412.54.html`,
                 },
         });
         client.on('qr', (qr) => {
@@ -64,9 +70,15 @@ async function conectDB(){
         });
 
         
-        client.on('ready', () => {
+        client.on('ready', async() => {
           console.log('Conectado a WhatsApp');
           isWhatsAppConnection = true;
+          // const version = await client.getWWebVersion();
+          // console.log(`WWeb v${version}`);
+        });
+
+        client.on('error', (error) => {
+          console.error('Client Error:', error);
         });
 
         console.log('Finalizando Instancia Client')  
@@ -170,15 +182,19 @@ app.get('/status', (req,res)=>{
 
 app.get('/conection', async(req,res)=>{
     try {
-      await conectDB()
+      // if(!isWhatsAppConnection){
+      //   await conectDB()
+      //   return res.json({isWhatsAppConnection})
+      // }
+
+      const user = new WhastappClient('bastian')
+      const connection = await user.createClientConnection();
+      console.log('user-client-ready',user.clientReady)
+      return res.json({isWhatsAppConnection, "user-ready": user.clientReady})
     } catch (error) {
       console.log(error)
       return res.json({error: 'Error al conectar WhatsApp'})
     }  
-  
-
-  
-  return res.json({isWhatsAppConnection})
 })
 
 

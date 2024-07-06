@@ -2,6 +2,7 @@ import express from 'express'
 import pkg from 'whatsapp-web.js';
 const { MessageMedia } = pkg;
 const router = express.Router();
+import {WhastappClient} from './WhatsappClient';
 
 let client                   = null;
 let isWhatsAppConnection     = false;
@@ -22,7 +23,8 @@ router.get('/status', (req,res)=>{
 
 router.get('/conection', async(req,res)=>{
     try {
-      await conectDB()
+      const user = new WhastappClient()
+      return res.json({error: 'Error al conectar WhatsApp', user: user})
     } catch (error) {
       console.log(error)
       return res.json({error: 'Error al conectar WhatsApp'})
