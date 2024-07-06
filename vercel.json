@@ -1,4 +1,3 @@
-
 {
   "version": 2,
   "builds": [
@@ -16,7 +15,7 @@
   ],
   "functions": {
     "node": {
-      "includeFiles": "node_modules/puppeteer/.local-chromium/**/*"
+      "includeFiles": "node_modules/puppeteer-core/.local-chromium/**/*"
     }
   },
   "build": {
