@@ -44,7 +44,7 @@ class WhastappClient{
                   args: ["--no-sandbox"],
                 },
                 authStrategy: new LocalAuth({
-                    dataPath: './sessions', // Specify the data path for local storage
+                    dataPath: './sessions2', // Specify the data path for local storage
                 }),
                 // authStrategy: new RemoteAuth({
                 //   clientId: `${this.userId}`,
