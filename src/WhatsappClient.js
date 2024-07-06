@@ -16,7 +16,7 @@ dotenv.config();
 
 class WhastappClient{
     constructor(userId){
-        this.mongoURI    = process.env.MONGODB_URI;
+        this.mongoURI    = process.env.MONGODB_URI || "";
         this.userId      = userId;
         this.client      = null;
         this.clientReady = false;
