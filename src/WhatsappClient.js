@@ -1,6 +1,7 @@
 import { MongoStore } from "wwebjs-mongo";
 import mongoose from "mongoose";
 import puppeteer from 'puppeteer';
+import chromium from 'chrome-aws-lambda';
 // import { RemoteAuth, Client } from "whatsapp-web.js";
 import pkg from 'whatsapp-web.js';
 const { Client, RemoteAuth,MessageMedia,LocalAuth } = pkg;
