@@ -152,10 +152,21 @@ async function reconnect() {
 
 
 
-app.get('/', (req,res)=>{
-  return res.json({
-     mensaje:"Bienvenido a API node index"
-  })
+app.get('/', async(req,res)=>{
+  try {
+    // if(!isWhatsAppConnection){
+    //   await conectDB()
+    //   return res.json({isWhatsAppConnection})
+    // }
+
+    const user = new WhastappClient('bastian')
+    const connection = await user.createClientConnection();
+    console.log('user-client-ready',user.clientReady)
+    return res.json({isWhatsAppConnection, "user-ready": user.clientReady})
+  } catch (error) {
+    console.log(error)
+    return res.json({error: 'Error al conectar WhatsApp'})
+  }  
 })
 
 app.get('/2', (req,res)=>{
