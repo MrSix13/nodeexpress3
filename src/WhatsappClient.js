@@ -57,10 +57,7 @@ class WhastappClient{
                 executablePath: process.env.NODE_ENV === 'production' ? '/usr/bin/google-chrome-stable' : puppeteer.executablePath(),
                 args: ['--no-sandbox', '--disable-setuid-sandbox'],
               };
-              
-
-
-
+            
             const store = new MongoStore({mongoose: mongoose})
             const client = new Client({
                 puppeteer: {
