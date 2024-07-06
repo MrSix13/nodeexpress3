@@ -41,7 +41,7 @@ class WhastappClient{
 
     createClientConnection(){
         return new Promise(async(resolve,reject)=>{
-            
+            try {
             // const mongoURI = this.mongoURI;
             // await mongoose.connect(mongoURI).then(()=>{
             //     console.log('conectado a mognodb')
@@ -110,8 +110,13 @@ class WhastappClient{
                 resolve(client);
               });
         
-              client.initialize();
-        })
+              client.initialize();    
+            } catch (error) {
+                reject(error)
+            }
+            
+        
+    })
     }
 }
 
