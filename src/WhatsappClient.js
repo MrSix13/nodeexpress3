@@ -4,7 +4,14 @@ import mongoose from "mongoose";
 import pkg from 'whatsapp-web.js';
 const { Client, RemoteAuth,MessageMedia,LocalAuth } = pkg;
 import qrcode from 'qrcode-terminal';
+// import path from 'path';
+// import { dirname } from "path";
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { mkdirSync } from 'fs';
 // const { RemoteAuth, Client } = require('whatsapp-web.js');
+dotenv.config();
 
 class WhastappClient{
     constructor(userId){
@@ -38,13 +45,19 @@ class WhastappClient{
                 console.log('conectado a mognodb')
             });
 
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+            console.log(__dirname)
+            const dataPath = process.env.NODE_ENV === 'production' ? '/tmp/sessions' : path.join(__dirname, 'sessions');            
+            mkdirSync(dataPath, { recursive: true });
+            console.log(dataPath)
             const store = new MongoStore({mongoose: mongoose})
             const client = new Client({
                 puppeteer: {
                   args: ["--no-sandbox"],
                 },
                 authStrategy: new LocalAuth({
-                    dataPath: './sessions2', // Specify the data path for local storage
+                    dataPath: dataPath, // Specify the data path for local storage
                 }),
                 // authStrategy: new RemoteAuth({
                 //   clientId: `${this.userId}`,
