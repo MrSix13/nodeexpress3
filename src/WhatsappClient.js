@@ -56,7 +56,7 @@ class WhastappClient{
             let puppeterOption = {}
 
             if (process.env.NODE_ENV === 'production') {
-                const executablePath = await chromium.executablePath;
+                const executablePath = await chromium.executablePath || await chromium.executablePath();
                 puppeterOption = {
                     args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
                     defaultViewport: chromium.defaultViewport,
