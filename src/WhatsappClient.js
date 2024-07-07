@@ -2,7 +2,6 @@ import { MongoStore } from "wwebjs-mongo";
 import mongoose from "mongoose";
 import puppeteer from 'puppeteer';
 import chromium from '@sparticuz/chromium';
-// import { RemoteAuth, Client } from "whatsapp-web.js";
 import pkg from 'whatsapp-web.js';
 const { Client, RemoteAuth,MessageMedia,LocalAuth } = pkg;
 import qrcode from 'qrcode-terminal';
@@ -79,9 +78,14 @@ class WhastappClient{
     
               const  puppeterOption = {
                     headless: true,
-                    executablePath: puppeteer.executablePath(),
-                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                    executablePath: await chromium.executablePath(),
+                    args: chromium.args,
                 }
+            //   const  puppeterOption = {
+            //         headless: true,
+            //         executablePath: puppeteer.executablePath(),
+            //         args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            //     }
               
             
             const store = new MongoStore({mongoose: mongoose})
