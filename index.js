@@ -41,59 +41,59 @@ console.log(`https://raw.githubusercontent.com/wppconnect-team/wa-version/main/h
 
 
 
-async function conectDB(){
-  try {
-    await mongoose.connect(MONGO_URI)
-    const store = new MongoStore({mongoose: mongoose});
-    console.log
-      console.log('Conectandose a Whastap Web')
-      if(!isWhatsAppConnection){
-        console.log('Creando Instancia Client')
-        client = new Client({
-          authStrategy: new MongoRemoteAuth({
-              store: store,
-              backupSyncIntervalMs: 300000
-          }),
-          restartOnAuthFail:true,
-          puppeteer: {
-            headless: false,
-            // args: [/* your args here */]
-          },
-          webVersionCache: {
-                  type: "remote",
-                  remotePath:`https://raw.githubusercontent.com/wppconnect-team/wa-version/601b90a9fffce8a19e08efba9bd804fdcb43f656/html/2.2412.54.html`,
-                },
-        });
-        client.on('qr', (qr) => {
-            qrcode.generate(qr, { small: true });
-            console.log('QR RECEIVED', qr);
-        });
+// async function conectDB(){
+//   try {
+//     await mongoose.connect(MONGO_URI)
+//     const store = new MongoStore({mongoose: mongoose});
+//     console.log
+//       console.log('Conectandose a Whastap Web')
+//       if(!isWhatsAppConnection){
+//         console.log('Creando Instancia Client')
+//         client = new Client({
+//           authStrategy: new MongoRemoteAuth({
+//               store: store,
+//               backupSyncIntervalMs: 300000
+//           }),
+//           restartOnAuthFail:true,
+//           puppeteer: {
+//             headless: false,
+//             // args: [/* your args here */]
+//           },
+//           webVersionCache: {
+//                   type: "remote",
+//                   remotePath:`https://raw.githubusercontent.com/wppconnect-team/wa-version/601b90a9fffce8a19e08efba9bd804fdcb43f656/html/2.2412.54.html`,
+//                 },
+//         });
+//         client.on('qr', (qr) => {
+//             qrcode.generate(qr, { small: true });
+//             console.log('QR RECEIVED', qr);
+//         });
 
         
-        client.on('ready', async() => {
-          console.log('Conectado a WhatsApp');
-          isWhatsAppConnection = true;
-          // const version = await client.getWWebVersion();
-          // console.log(`WWeb v${version}`);
-        });
+//         client.on('ready', async() => {
+//           console.log('Conectado a WhatsApp');
+//           isWhatsAppConnection = true;
+//           // const version = await client.getWWebVersion();
+//           // console.log(`WWeb v${version}`);
+//         });
 
-        client.on('error', (error) => {
-          console.error('Client Error:', error);
-        });
+//         client.on('error', (error) => {
+//           console.error('Client Error:', error);
+//         });
 
-        console.log('Finalizando Instancia Client')  
-        await client.initialize();
-      }
+//         console.log('Finalizando Instancia Client')  
+//         await client.initialize();
+//       }
    
-    console.log('conectado  MONGODB')
+//     console.log('conectado  MONGODB')
 
     
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
+//     } catch (error) {
+//       console.log(error)
+//       throw error
+//     }
 
-};
+// };
 
 const SessionSchema = new mongoose.Schema({
   id        : {type: String, unique:true},
