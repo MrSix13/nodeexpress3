@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import morgan from 'morgan';
+// import morgan from 'morgan';
 
 import pkg from 'whatsapp-web.js';
 import dotenv from 'dotenv';
@@ -20,7 +20,7 @@ let userWsp = null;
 dotenv.config();
 app.use('/api', router);
 app.use(express.json())
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 app.use(cors());
 
 
