@@ -8,12 +8,13 @@ const { Client, RemoteAuth,MessageMedia } = pkg;
 import qrcode from 'qrcode-terminal';
 import {mongoose} from 'mongoose';
 import { MongoStore } from 'wwebjs-mongo';
-import WhastappClient from '../src/WhatsappClient.js';
+import WhastappClient from './src/WhatsappClient.js';
 
 
 const router = express.Router();
 
 const app = express();
+let userWsp = null;
 
 
 dotenv.config();
@@ -28,7 +29,6 @@ app.use(cors());
 
 
 let client                   = null;
-let isWhatsAppConnection     = false;
 // https://github.com/wppconnect-team/wa-version/blob/main/html/2.3000.1012089252-alpha.html
 let versionCacheWhastAppWeb  = '2.3000.1014380769-alpha.html'
 
@@ -186,15 +186,18 @@ app.get('/status', (req,res)=>{
 
 app.get('/conection', async(req,res)=>{
     try {
-      // if(!isWhatsAppConnection){
-      //   await conectDB()
-      //   return res.json({isWhatsAppConnection})
-      // }
-
-      const user = new WhastappClient('bastian')
-      const connection = await user.createClientConnection();
-      console.log('user-client-ready',user.clientReady)
-      return res.json({isWhatsAppConnection, "user-ready": user.clientReady})
+      await userWsp.createClientConnection('bastian')
+      return res.json({"user-ready": userWsp.clientReady})
+    } catch (error) {
+      console.log(error)
+      return res.json({error: 'Error al conectar WhatsApp'})
+    }  
+})
+app.get('/info', async(req,res)=>{
+    try {
+      let info = userWsp.clientReady
+      console.log('user-client-ready',info)
+      return res.json({"user-ready": info})
     } catch (error) {
       console.log(error)
       return res.json({error: 'Error al conectar WhatsApp'})
@@ -204,20 +207,12 @@ app.get('/conection', async(req,res)=>{
 
 app.post('/enviar-mensaje', async(req,res)=>{
   try {
-  if (!client) {
-      await conectDB();
-  }
-
-
-  if(!isWhatsAppConnection){
-    return res.json({mensaje:"Conenctando a wsp, intente mas tarde"})
-  }
-    if(isWhatsAppConnection){
+    if(userWsp.clientReady){
       const {numero, mensaje} = req.body;   
       for (const phoneNumber of numero) {
           const formattedNumber = phoneNumber + '@c.us';
           console.log('formattedNumber:', formattedNumber)
-          await client.sendMessage(formattedNumber, mensaje || 'test');
+          await userWsp.client.sendMessage(formattedNumber, mensaje || 'test');
 
       }   
      res.json({ mensaje: 'Mensajes enviados correctamente.' });
@@ -263,8 +258,10 @@ app.post('/enviar-mensaje-pdf', async(req,res)=>{
 
 
 
+
 app.listen(port, ()=>{
     console.log('app escuchando en puerto' + port)
+    userWsp = new WhastappClient('bastian')
     // conectDB()
 })
 

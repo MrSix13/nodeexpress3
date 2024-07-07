@@ -17,7 +17,7 @@ dotenv.config();
 
 class WhastappClient{
     constructor(userId){
-        this.mongoURI    = "";
+        this.mongoURI    = process.env.MONGODB_URI || "";
         this.userId      = userId;
         this.client      = null;
         this.clientReady = false;
@@ -25,6 +25,10 @@ class WhastappClient{
 
     getUserId(){
         return this.userId;
+    }
+
+    getClient(){
+        return this.client;
     }
 
     setClient(client){
@@ -42,17 +46,17 @@ class WhastappClient{
     createClientConnection(){
         return new Promise(async(resolve,reject)=>{
             try {
-            // const mongoURI = this.mongoURI;
-            // await mongoose.connect(mongoURI).then(()=>{
-            //     console.log('conectado a mognodb')
-            // })
+            const mongoURI = this.mongoURI;
+            await mongoose.connect(mongoURI).then(()=>{
+                console.log('conectado a mognodb')
+            })
 
-            const __filename = fileURLToPath(import.meta.url);
-            const __dirname = path.dirname(__filename);
-            console.log(__dirname)
-            const dataPath = process.env.NODE_ENV === 'production' ? '/tmp/sessions' : path.join(__dirname, 'sessions');            
-            mkdirSync(dataPath, { recursive: true });
-            console.log(dataPath)
+            // const __filename = fileURLToPath(import.meta.url);
+            // const __dirname = path.dirname(__filename);
+            // console.log(__dirname)
+            // const dataPath = process.env.NODE_ENV === 'production' ? '/tmp/sessions' : path.join(__dirname, 'sessions');            
+            // mkdirSync(dataPath, { recursive: true });
+            // console.log(dataPath)
             let puppeterOption = {}
 
             if (process.env.NODE_ENV === 'production') {
@@ -78,20 +82,19 @@ class WhastappClient{
             //     args: ['--no-sandbox', '--disable-setuid-sandbox'],
             //   };
             
-            // const store = new MongoStore({mongoose: mongoose})
+            const store = new MongoStore({mongoose: mongoose})
             const client = new Client({
                 puppeteer: {
                   args: ["--no-sandbox"],
                 },
                 puppeteer: puppeterOption,
-                authStrategy: new LocalAuth({
-                    dataPath: dataPath, // Specify the data path for local storage
-                }),
-                // authStrategy: new RemoteAuth({
-                //   clientId: `${this.userId}`,
-                //   store: store,
-                //   backupSyncIntervalMs: 300000,
+                // authStrategy: new LocalAuth({
+                //     dataPath: dataPath, // Specify the data path for local storage
                 // }),
+                authStrategy: new RemoteAuth({
+                  store: store,
+                  backupSyncIntervalMs: 300000,
+                }),
               });
             
               client.on("qr", (qr) => {
@@ -106,6 +109,7 @@ class WhastappClient{
               client.once("ready", () => {
                 console.log("Client is ready!");
                 console.log(client.info);
+                this.client = client
                 this.clientReady = true;
                 resolve(client);
               });
