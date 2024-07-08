@@ -76,16 +76,16 @@ class WhastappClient{
             // }
 
     
-              const  puppeterOption = {
-                    headless: true,
-                    executablePath: await chromium.executablePath(),
-                    args: chromium.args,
-                }
             //   const  puppeterOption = {
             //         headless: true,
-            //         executablePath: puppeteer.executablePath(),
-            //         args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            //         executablePath: await chromium.executablePath(),
+            //         args: chromium.args,
             //     }
+              const  puppeterOption = {
+                    headless: true,
+                    executablePath: puppeteer.executablePath(),
+                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                }
               
             
             const store = new MongoStore({mongoose: mongoose})

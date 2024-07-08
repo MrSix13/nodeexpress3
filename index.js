@@ -160,10 +160,10 @@ app.get('/', async(req,res)=>{
     //   return res.json({isWhatsAppConnection})
     // }
 
-    const user = new WhastappClient('bastian')
-    const connection = await user.createClientConnection();
-    console.log('user-client-ready',user.clientReady)
-    return res.json({isWhatsAppConnection, "user-ready": user.clientReady})
+    // const user = new WhastappClient('bastian')
+    // const connection = await user.createClientConnection();
+    // console.log('user-client-ready',user.clientReady)
+    return res.json({"user-wsp": userWsp})
   } catch (error) {
     console.log(error)
     return res.json({error: 'Error al conectar WhatsApp'})
