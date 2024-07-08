@@ -68,6 +68,7 @@ class WhastappClient{
                 qrcode.generate(qr, { small: true });
               });
         
+              
               client.on("authenticated", async () => {
                 console.log("Authenticated");
               });

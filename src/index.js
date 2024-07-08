@@ -3,12 +3,13 @@ import express from 'express';
 // import morgan from 'morgan';
 
 import pkg from 'whatsapp-web.js';
+
 import dotenv from 'dotenv';
 const { Client, RemoteAuth,MessageMedia } = pkg;
 import qrcode from 'qrcode-terminal';
 import {mongoose} from 'mongoose';
 import { MongoStore } from 'wwebjs-mongo';
-import WhastappClient from './src/WhatsappClient.js';
+import WhastappClient from './WhatsappClient.js';
 
 
 const router = express.Router();
