@@ -49,55 +49,14 @@ class WhastappClient{
             await mongoose.connect(mongoURI).then(()=>{
                 console.log('conectado a mognodb')
             })
-
-            // const __filename = fileURLToPath(import.meta.url);
-            // const __dirname = path.dirname(__filename);
-            // console.log(__dirname)
-            // const dataPath = process.env.NODE_ENV === 'production' ? '/tmp/sessions' : path.join(__dirname, 'sessions');            
-            // mkdirSync(dataPath, { recursive: true });
-            // console.log(dataPath)
-            // let puppeterOption = {}
-
-            // if (process.env.NODE_ENV === 'production') {
-            //     const executablePath = await chromium.executablePath();
-            //     puppeterOption = {
-            //         args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
-            //         defaultViewport: chromium.defaultViewport,
-            //         executablePath,
-            //         headless: chromium.headless,
-            //     }
-
-            // }else{
-            //     puppeterOption = {
-            //         headless: true,
-            //         executablePath: puppeteer.executablePath(),
-            //         args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            //     }
-            // }
-
-    
-            //   const  puppeterOption = {
-            //         headless: true,
-            //         executablePath: await chromium.executablePath(),
-            //         args: chromium.args,
-            //     }
-              const  puppeterOption = {
+            const  puppeterOption = {
                     headless: true,
                     executablePath: puppeteer.executablePath(),
                     args: ['--no-sandbox', '--disable-setuid-sandbox'],
-                }
-              
-            
+            }
             const store = new MongoStore({mongoose: mongoose})
             const client = new Client({
-                // puppeteer: {
-                //   args: ["--no-sandbox",'--disable-setuid-sandbox'],
-                //   headless: true,
-                // },
                 puppeteer: puppeterOption,
-                // authStrategy: new LocalAuth({
-                //     dataPath: dataPath, // Specify the data path for local storage
-                // }),
                 authStrategy: new RemoteAuth({
                   store: store,
                   backupSyncIntervalMs: 300000,
